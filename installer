@@ -1,0 +1,139 @@
+#!/bin/bash
+PHP_VER="5.4.7"
+NGINX_VER="1.3.4"
+SSL_VER="1.0.1c"
+MYSQL_VER="5.5.27"
+GALERA_VER="23.2.1"
+
+
+
+echo "# Creating Base Directory Heiarchy"
+if [ ! -d "bakerySourceFiles" ]; then
+        mkdir bakerySourceFiles
+fi
+cd bakerySourceFiles
+echo ""
+
+if [ ! -z bakeryLog ]; then
+	touch bakeryLog
+fi
+
+
+
+echo "# Getting Package Dependencies" 
+sudo apt-get install -yqq build-essential flex bison automake libreadline6-dev \
+autoconf bzr libtool cmake libaio-dev zlib1g-dev re2c libpspell-dev \
+libxml2-dev libbz2-dev libpcre3-dev libssl-dev zlib1g-dev libmcrypt-dev libmhash-dev libmhash2 \
+libpq5 libncurses5-dev bison git libxslt1-dev libbz2-dev libexif-dev libsnmp-dev libldap-2.4-2 libldap2-dev \
+libfreetype6-dev libjpeg8-dev libpng12-dev libgif-dev libcurl4-openssl-dev libpq-dev scons check libboost1.48 libboost1.48-dev >> bakeryLog
+
+echo "# Creating Library Links" 
+sudo ln -s /usr/lib/x86_64-linux-gnu/libldap* /usr/lib/  >> bakeryLog 2>&1
+echo "" 
+
+
+
+echo "# Getting OpenSSL ($SSL_VER)"
+if [ ! -f openssl-$SSL_VER.tar.gz ]; then
+	wget http://www.openssl.org/source/openssl-$SSL_VER.tar.gz >>  bakeryLog
+	tar xvzf openssl-$SSL_VER.tar.gz >>  bakeryLog
+fi
+
+make clean
+echo "# Configuring OpenSSL"
+cd openssl-$SSL_VER
+./Configure --prefix=/usr/local/openssl linux-x86_64 >>  bakeryLog
+echo "# Building OpenSSL"
+make  >>  bakeryLog
+sudo make install  >>  bakeryLog
+cd ..
+
+echo "# Getting Galera (Replication)"
+if [ ! -f galera-$GALERA_VER-src.tar.gz ]; then
+	wget https://launchpad.net/galera/2.x/$GALERA_VER/+download/galera-$GALERA_VER-src.tar.gz
+	tar xvzf galera-$GALERA_VER-src.tar.gz
+fi
+cd galera-$GALERA_VER-src
+scons
+sudo cp libgalera_smm.so /usr/lib
+cd ..
+
+echo "# Getting Percona XtraDB Cluster ($MYSQL_VER)"
+if [ ! -f Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz ]; then
+	wget http://www.percona.com/redir/downloads/Percona-XtraDB-Cluster/LATEST/source/Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz >>  bakeryLog
+	tar xvzf Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz >> bakeryLog
+fi
+echo "# Configuring MySQL"
+cd Percona-XtraDB-Cluster-$MYSQL_VER
+make clean >> bakeryLog
+echo "# Building Percona with Clustering Support"
+sudo useradd -Ms /usr/sbin/noshell mysql
+BUILD/autorun.sh
+./configure --with-wsrep=1 --prefix=/usr/local/mysql-5.5 >> bakeryLog
+make >>  bakeryLog
+echo "# Installing Percona"
+sudo make install  >>  bakeryLog
+sudo ln -s /usr/local/mysql-5.5/lib/* /usr/lib/  >>  bakeryLog
+chmod +x scripts/mysql_install_db
+echo "# Inserting default MySQL tables"
+sudo ./scripts/mysql_install_db --ldata=/usr/local/mysql-5.5/data/ --basedir=/usr/local/mysql-5.5/ --user=mysql >> bakeryLog
+sudo cp support-files/mysql.server /etc/init.d/mysql
+sudo chmod +x /etc/init.d/mysql
+sudo update-rc.d mysql defaults
+
+cd ..
+
+
+
+
+echo "# Getting PHP ($PHP_VER)"
+if [ ! -f php-$PHP_VER.tar.gz ]; then
+	wget http://us2.php.net/get/php-$PHP_VER.tar.gz/from/this/mirror >>  bakeryLog 2>&1
+	mv mirror php-$PHP_VER.tar.gz >>  bakeryLog 2>&1
+fi
+
+echo "# Configuring PHP"
+tar xvzf php-$PHP_VER.tar.gz >>  bakeryLog 2>&1
+cd php-$PHP_VER
+'./configure'  '--enable-shared' '--prefix=/usr/local/php5.4' '--enable-fastcgi' '--enable-cgi' '--enable-fpm' '--enable-cli' '--disable-debug' '--disable-rpath' '--disable-static' '--with-pic' '--enable-bcmath' '--with-bz2' '--enable-calendar' '--enable-ctype' '--with-curl' '--with-zlib-dir=/usr' '--with-xsl' '--enable-exif' '--enable-ftp' '--enable-gd-native-ttf' '--with-ttf' '--with-jpeg-dir=/usr' '--with-png-dir=/usr' '--with-freetype-dir=/usr' '--with-gettext' '--with-iconv' '--with-kerberos=/usr' '--enable-mbstring' '--with-mcrypt' '--with-mhash' '--with-mime-magic' '--with-mysql=/usr/local/mysql-5.5' '--with-pspell=/usr' '--enable-sockets' '--enable-wddx' '--with-xmlrpc' '--with-zlib=/usr' '--with-pear' '--with-layout=GNU' '--with-ldap' '--enable-pdo' '--enable-soap' '--enable-pcntl' '--enable-mailparse' '--with-zip=/usr' '--with-bz2=/usr' '--with-config-file-path=/etc' '--with-config-file-scan-dir=/usr/local/php5.4/etc' '--with-pdo-mysql=/usr/local/mysql-5.5' '-with-mysqli=/usr/local/mysql-5.5/bin/mysql_config' '--enable-sysvsem' '--enable-sysvshm' '--enable-sysvmsg' '--enable-phar' '--enable-gd' '--with-gd' '--with-openssl-dir=/usr/local/openssl' '--with-snmp' '--with-memcached' '--with-readline=/usr'
+
+echo "# Building PHP"
+make >> bakerLog
+
+echo "# Installing PHP"
+sudo make all install >> bakeryLog
+sudo ln -s /usr/local/php5.4/sbin/php-fpm /usr/bin/php-fpm
+sudo cp -f sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
+#sudo mv /usr/local/php5.4/etc/php-fpm.conf.default /usr/local/php5.4/etc/php-fpm.conf
+sudo update-rc.d php-fpm defaults
+
+cd ..
+
+
+echo "# Getting nginx ($NGINX_VER)"
+if [ ! -f nginx-$NGINX_VER.tar.gz ]; then
+	wget http://nginx.org/download/nginx-$NGINX_VER.tar.gz >> bakeryLog
+fi
+tar xvzf nginx-$NGINX_VER.tar.gz
+cd nginx-$NGINX_VER
+./configure --with-http_ssl_module --with-http_secure_link_module --with-http_stub_status_module --sbin-path=/usr/local/sbin
+make
+sudo make install
+cd ..
+
+
+echo "# Creating Environment"
+sudo mkdir -p /usr/local/www/{conf,default}
+
+cd configs
+sudo cp my.cnf /etc
+sudo cp -R default.conf /usr/local/www/conf
+sudo cp -R default.file /usr/local/www/default/index.php
+sudo cp -R nginx /usr/local/nginx/conf
+sudo cp php-fpm.conf /usr/local/php5.4/etc
+sudo cp nginx.server /etc/init.d/nginx
+
+sudo update-rc.d nginx default
+
+export PATH=$PATH:/usr/local/php5.4/bin:/usr/local/mysql-5.5/bin:/usr/local/nginx/bin
+
