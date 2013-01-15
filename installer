@@ -39,9 +39,9 @@ if [ ! -f openssl-$SSL_VER.tar.gz ]; then
 	tar xvzf openssl-$SSL_VER.tar.gz >>  bakeryLog
 fi
 
-make clean
 echo "# Configuring OpenSSL"
 cd openssl-$SSL_VER
+make clean
 ./Configure --prefix=/usr/local/openssl linux-x86_64 >>  bakeryLog
 echo "# Building OpenSSL"
 make  >>  bakeryLog
