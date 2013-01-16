@@ -1,8 +1,8 @@
 #!/bin/bash
-PHP_VER="5.4.8"
+PHP_VER="5.4.10"
 NGINX_VER="1.3.4"
 SSL_VER="1.0.1c"
-MYSQL_VER="5.5.27"
+MYSQL_VER="5.5.28"
 GALERA_VER="23.2.1"
 
 
@@ -30,7 +30,6 @@ libfreetype6-dev libjpeg8-dev libpng12-dev libgif-dev libcurl4-openssl-dev libpq
 echo "# Creating Library Links" 
 sudo ln -s /usr/lib/x86_64-linux-gnu/libldap* /usr/lib/  >> bakeryLog 2>&1
 echo "" 
-
 
 
 echo "# Getting OpenSSL ($SSL_VER)"
@@ -63,6 +62,8 @@ if [ ! -f Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz ]; then
 	wget http://www.percona.com/redir/downloads/Percona-XtraDB-Cluster/LATEST/source/Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz >>  bakeryLog
 	tar xvzf Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz >> bakeryLog
 fi
+
+
 echo "# Configuring MySQL"
 cd Percona-XtraDB-Cluster-$MYSQL_VER
 make clean >> bakeryLog
@@ -125,7 +126,8 @@ cd ..
 echo "# Creating Environment"
 sudo mkdir -p /usr/local/www/{conf,default}
 
-cd configs
+cd ../configs
+
 sudo cp my.cnf /etc
 sudo cp -R default.conf /usr/local/www/conf
 sudo cp -R default.file /usr/local/www/default/index.php
@@ -133,7 +135,7 @@ sudo cp -R nginx /usr/local/nginx/conf
 sudo cp php-fpm.conf /usr/local/php5.4/etc
 sudo cp nginx.server /etc/init.d/nginx
 
-sudo update-rc.d nginx default
+sudo update-rc.d nginx defaults
 
 export PATH=$PATH:/usr/local/php5.4/bin:/usr/local/mysql-5.5/bin:/usr/local/nginx/bin
 
