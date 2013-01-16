@@ -26,15 +26,23 @@ BakeryServer is a nginx, PHP-FPM, Percona install optimized for Bakery Framework
 
 ##1. Introduction
 
-
+BakeryServer was designed to be a rapid release server deployment script, without the bloat of MaaS or other services. You can deploy multiple server clustering, with small changes to your `nginx` and `MySQL` conf files, as all modules are compiled and installed by default.
 
 ##2. Requirenments
 
+* Ubuntu 12.04+, x86_64, Clean Install
+* > 1GB Random Access Memory
+* > 4.0GB Hard Drive Space
+* Public Internet Access
 
 
 ##3. Usage
 
+Simply run:
 
+    $ git clone https://github.com/mikemackintosh/BakeryServer.git
+    $ cd BakeryServer
+    $ sudo ./installer
 
 ##4. Performance
 
