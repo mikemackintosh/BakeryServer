@@ -46,19 +46,21 @@ Simply run:
 
 ##4. Performance
 
-
+Not documented
 
 ##5. Hardening
 
-
+Not documented
 
 ##6. Roadmap
 
-
+* Add multi-distro support
+* Add multi-architecture support
+* Add advanced configuration 
 
 ##7. Credits
 
-Mike Mackintosh - Developer (http://www.mikemackintosh.com) (http://www.highonphp.com)
+Mike Mackintosh - Developer (http://www.mikemackintosh.com)
 
 ##8. Donate
 
