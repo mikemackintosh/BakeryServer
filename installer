@@ -103,6 +103,7 @@ make >> bakerLog
 
 echo "# Installing PHP"
 sudo make all install >> bakeryLog
+sudo chmod +x /usr/local/php5.4/sbin/php-fpm
 sudo ln -s /usr/local/php5.4/sbin/php-fpm /usr/bin/php-fpm
 sudo cp -f sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
 #sudo mv /usr/local/php5.4/etc/php-fpm.conf.default /usr/local/php5.4/etc/php-fpm.conf
