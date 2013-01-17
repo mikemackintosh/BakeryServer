@@ -28,20 +28,20 @@ libpq5 libncurses5-dev bison git libxslt1-dev libbz2-dev libexif-dev libsnmp-dev
 libfreetype6-dev libjpeg8-dev libpng12-dev libgif-dev libcurl4-openssl-dev libpq-dev scons check libboost1.48 libboost1.48-dev >> bakeryLog
 
 echo "# Creating Library Links" 
-sudo ln -s /usr/lib/x86_64-linux-gnu/libldap* /usr/lib/  >> bakeryLog 2>&1
+sudo ln -s /usr/lib/`uname -m`-linux-gnu/libldap* /usr/lib/  >> bakeryLog 2>&1
 echo "" 
 
 
 echo "# Getting OpenSSL ($SSL_VER)"
 if [ ! -f openssl-$SSL_VER.tar.gz ]; then
-	wget http://www.openssl.org/source/openssl-$SSL_VER.tar.gz >>  bakeryLog
-	tar xvzf openssl-$SSL_VER.tar.gz >>  bakeryLog
+	wget http://www.openssl.org/source/openssl-$SSL_VER.tar.gz >>  bakeryLog 2>&1
+	tar xvzf openssl-$SSL_VER.tar.gz >>  bakeryLog 2>&1
 fi
 
 echo "# Configuring OpenSSL"
 cd openssl-$SSL_VER
 make clean
-./Configure --prefix=/usr/local/openssl linux-x86_64 >>  bakeryLog
+./Configure --prefix=/usr/local/openssl linux-`uname -m` >>  bakeryLog 2>&1
 echo "# Building OpenSSL"
 make  >>  bakeryLog
 sudo make install  >>  bakeryLog
@@ -49,8 +49,8 @@ cd ..
 
 echo "# Getting Galera (Replication)"
 if [ ! -f galera-$GALERA_VER-src.tar.gz ]; then
-	wget https://launchpad.net/galera/2.x/$GALERA_VER/+download/galera-$GALERA_VER-src.tar.gz
-	tar xvzf galera-$GALERA_VER-src.tar.gz
+	wget https://launchpad.net/galera/2.x/$GALERA_VER/+download/galera-$GALERA_VER-src.tar.gz >>  bakeryLog 2>&1
+	tar xvzf galera-$GALERA_VER-src.tar.gz >>  bakeryLog 2>&1
 fi
 cd galera-$GALERA_VER-src
 scons
@@ -59,8 +59,8 @@ cd ..
 
 echo "# Getting Percona XtraDB Cluster ($MYSQL_VER)"
 if [ ! -f Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz ]; then
-	wget http://www.percona.com/redir/downloads/Percona-XtraDB-Cluster/LATEST/source/Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz >>  bakeryLog
-	tar xvzf Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz >> bakeryLog
+	wget http://www.percona.com/redir/downloads/Percona-XtraDB-Cluster/LATEST/source/Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz >>  bakeryLog  2>&1
+	tar xvzf Percona-XtraDB-Cluster-$MYSQL_VER.tar.gz >> bakeryLog 2>&1
 fi
 
 
@@ -68,7 +68,7 @@ echo "# Configuring MySQL"
 cd Percona-XtraDB-Cluster-$MYSQL_VER
 make clean >> bakeryLog
 echo "# Building Percona with Clustering Support"
-sudo useradd -Ms /usr/sbin/noshell mysql
+sudo useradd -Ms /usr/sbin/noshell mysql >>  bakeryLog 2>&1
 BUILD/autorun.sh
 ./configure --with-wsrep=1 --prefix=/usr/local/mysql-5.5 >> bakeryLog
 make >>  bakeryLog
@@ -114,13 +114,13 @@ cd ..
 
 echo "# Getting nginx ($NGINX_VER)"
 if [ ! -f nginx-$NGINX_VER.tar.gz ]; then
-	wget http://nginx.org/download/nginx-$NGINX_VER.tar.gz >> bakeryLog
+	wget http://nginx.org/download/nginx-$NGINX_VER.tar.gz >> bakeryLog  2>&1
 fi
 tar xvzf nginx-$NGINX_VER.tar.gz
 cd nginx-$NGINX_VER
-./configure --with-http_ssl_module --with-http_secure_link_module --with-http_stub_status_module --sbin-path=/usr/local/sbin
-make
-sudo make install
+./configure --with-http_ssl_module --with-http_secure_link_module --with-http_stub_status_module --sbin-path=/usr/local/sbin >> bakeryLog  2>&1
+make >> bakeryLog  2>&1
+sudo make install >> bakeryLog  2>&1
 cd ..
 
 
