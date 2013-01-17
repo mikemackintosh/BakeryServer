@@ -53,7 +53,7 @@ if [ ! -f galera-$GALERA_VER-src.tar.gz ]; then
 	tar xvzf galera-$GALERA_VER-src.tar.gz >>  bakeryLog 2>&1
 fi
 cd galera-$GALERA_VER-src
-scons
+scons >>  bakeryLog 2>&1
 sudo cp libgalera_smm.so /usr/lib
 cd ..
 
