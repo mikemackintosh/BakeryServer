@@ -40,11 +40,11 @@ fi
 
 echo "# Configuring OpenSSL"
 cd openssl-$SSL_VER
-make clean
+make clean  >>  bakeryLog 2>&1
 ./Configure --prefix=/usr/local/openssl linux-`uname -m` >>  bakeryLog 2>&1
 echo "# Building OpenSSL"
-make  >>  bakeryLog
-sudo make install  >>  bakeryLog
+make  >>  bakeryLog 2>&1
+sudo make install  >>  bakeryLog 2>&1
 cd ..
 
 echo "# Getting Galera (Replication)"
@@ -66,19 +66,19 @@ fi
 
 echo "# Configuring MySQL"
 cd Percona-XtraDB-Cluster-$MYSQL_VER
-make clean >> bakeryLog
+make clean >>  bakeryLog 2>&1
 echo "# Building Percona with Clustering Support"
 sudo useradd -Ms /usr/sbin/noshell mysql >>  bakeryLog 2>&1
-BUILD/autorun.sh
+BUILD/autorun.sh >>  bakeryLog 2>&1
 ./configure --with-wsrep=1 --prefix=/usr/local/mysql-5.5 >> bakeryLog
-make >>  bakeryLog
+make  >>  bakeryLog 2>&1
 echo "# Installing Percona"
-sudo make install  >>  bakeryLog
-sudo ln -s /usr/local/mysql-5.5/lib/* /usr/lib/  >>  bakeryLog
+sudo make install   >>  bakeryLog 2>&1
+sudo ln -s /usr/local/mysql-5.5/lib/* /usr/lib/  >>  bakeryLog 2>&1
 chmod +x scripts/mysql_install_db
 echo "# Inserting default MySQL tables"
-sudo ./scripts/mysql_install_db --ldata=/usr/local/mysql-5.5/data/ --basedir=/usr/local/mysql-5.5/ --user=mysql >> bakeryLog
-sudo cp support-files/mysql.server /etc/init.d/mysql
+sudo ./scripts/mysql_install_db --ldata=/usr/local/mysql-5.5/data/ --basedir=/usr/local/mysql-5.5/ --user=mysql  >>  bakeryLog 2>&1
+sudo cp support-files/mysql.server /etc/init.d/mysql >> bakeryLog 2>&1
 sudo chmod +x /etc/init.d/mysql
 sudo update-rc.d mysql defaults
 
@@ -96,13 +96,13 @@ fi
 echo "# Configuring PHP"
 tar xvzf php-$PHP_VER.tar.gz >>  bakeryLog 2>&1
 cd php-$PHP_VER
-'./configure'  '--enable-shared' '--prefix=/usr/local/php5.4' '--enable-fastcgi' '--enable-cgi' '--enable-fpm' '--enable-cli' '--disable-debug' '--disable-rpath' '--disable-static' '--with-pic' '--enable-bcmath' '--with-bz2' '--enable-calendar' '--enable-ctype' '--with-curl' '--with-zlib-dir=/usr' '--with-xsl' '--enable-exif' '--enable-ftp' '--enable-gd-native-ttf' '--with-ttf' '--with-jpeg-dir=/usr' '--with-png-dir=/usr' '--with-freetype-dir=/usr' '--with-gettext' '--with-iconv' '--with-kerberos=/usr' '--enable-mbstring' '--with-mcrypt' '--with-mhash' '--with-mime-magic' '--with-mysql=/usr/local/mysql-5.5' '--with-pspell=/usr' '--enable-sockets' '--enable-wddx' '--with-xmlrpc' '--with-zlib=/usr' '--with-pear' '--with-layout=GNU' '--with-ldap' '--enable-pdo' '--enable-soap' '--enable-pcntl' '--enable-mailparse' '--with-zip=/usr' '--with-bz2=/usr' '--with-config-file-path=/etc' '--with-config-file-scan-dir=/usr/local/php5.4/etc' '--with-pdo-mysql=/usr/local/mysql-5.5' '-with-mysqli=/usr/local/mysql-5.5/bin/mysql_config' '--enable-sysvsem' '--enable-sysvshm' '--enable-sysvmsg' '--enable-phar' '--enable-gd' '--with-gd' '--with-openssl-dir=/usr/local/openssl' '--with-snmp' '--with-memcached' '--with-readline=/usr'
+'./configure'  '--enable-shared' '--prefix=/usr/local/php5.4' '--enable-fastcgi' '--enable-cgi' '--enable-fpm' '--enable-cli' '--disable-debug' '--disable-rpath' '--disable-static' '--with-pic' '--enable-bcmath' '--with-bz2' '--enable-calendar' '--enable-ctype' '--with-curl' '--with-zlib-dir=/usr' '--with-xsl' '--enable-exif' '--enable-ftp' '--enable-gd-native-ttf' '--with-ttf' '--with-jpeg-dir=/usr' '--with-png-dir=/usr' '--with-freetype-dir=/usr' '--with-gettext' '--with-iconv' '--with-kerberos=/usr' '--enable-mbstring' '--with-mcrypt' '--with-mhash' '--with-mime-magic' '--with-mysql=/usr/local/mysql-5.5' '--with-pspell=/usr' '--enable-sockets' '--enable-wddx' '--with-xmlrpc' '--with-zlib=/usr' '--with-pear' '--with-layout=GNU' '--with-ldap' '--enable-pdo' '--enable-soap' '--enable-pcntl' '--enable-mailparse' '--with-zip=/usr' '--with-bz2=/usr' '--with-config-file-path=/etc' '--with-config-file-scan-dir=/usr/local/php5.4/etc' '--with-pdo-mysql=/usr/local/mysql-5.5' '-with-mysqli=/usr/local/mysql-5.5/bin/mysql_config' '--enable-sysvsem' '--enable-sysvshm' '--enable-sysvmsg' '--enable-phar' '--enable-gd' '--with-gd' '--with-openssl-dir=/usr/local/openssl' '--with-snmp' '--with-memcached' '--with-readline=/usr'  >>  bakeryLog 2>&1
 
 echo "# Building PHP"
-make >> bakerLog
+make  >>  bakeryLog 2>&1
 
 echo "# Installing PHP"
-sudo make all install >> bakeryLog
+sudo make all install  >>  bakeryLog 2>&1
 sudo chmod +x /usr/local/php5.4/sbin/php-fpm
 sudo ln -s /usr/local/php5.4/sbin/php-fpm /usr/bin/php-fpm
 sudo cp -f sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
