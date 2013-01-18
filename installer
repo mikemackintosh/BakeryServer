@@ -132,7 +132,7 @@ cd ../configs
 sudo cp my.cnf /etc
 sudo cp -R default.conf /usr/local/www/conf
 sudo cp -R default.file /usr/local/www/default/index.php
-sudo cp -R nginx /usr/local/nginx/conf
+sudo cp -R nginx/* /usr/local/nginx/conf
 sudo cp php-fpm.conf /usr/local/php5.4/etc
 sudo cp nginx.server /etc/init.d/nginx
 
