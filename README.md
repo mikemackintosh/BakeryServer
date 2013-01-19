@@ -2,7 +2,7 @@ BakeryServer # Recipe for Awesomeness
 ============
 
 ##Synopsis: 
-BakeryServer is a nginx, PHP-FPM, Percona install optimized for *nix. 
+BakeryServer is a **nginx**, **PHP-FPM**, **Percona** LAMP install optimized for *nix. 
 
 **Note:** Current version is designed for Ubuntu 12.04+!
 
