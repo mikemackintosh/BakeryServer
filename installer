@@ -150,3 +150,8 @@ for f in /home/*
 do
 	echo "source /etc/bakery_bash" >> "$f/.bashrc"
 done
+
+# Install PHP Composer
+echo "# Installing Composer"
+curl -s https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
