@@ -141,3 +141,12 @@ sudo update-rc.d nginx defaults
 
 export PATH=$PATH:/usr/local/php5.4/bin:/usr/local/mysql-5.5/bin:/usr/local/nginx/bin
 
+echo "" > /etc/bakery_bash
+echo "# Bakery Server PATH" >> /etc/bakery_bash
+echo "PATH=$PATH:/usr/local/php5.4/bin:/usr/local/mysql-5.5/bin:/usr/local/nginx/bin" >> /etc/bakery_bash
+
+
+for f in /home/*
+do
+	echo "source /etc/bakery_bash" >> "$f/.bashrc"
+done
