@@ -57,7 +57,7 @@ Not documented
 ##6. Roadmap
 
 * Add multi-distro support
-~~* Add multi-architecture support~~ - 1/20/13 - Use `uname -p` to pass arch to compile statements
+* ~~Add multi-architecture support~~ - 1/20/13 - Use `uname -p` to pass arch to compile statements
 * Add advanced configuration 
 
 ##7. Credits
