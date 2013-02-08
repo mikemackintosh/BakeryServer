@@ -22,7 +22,7 @@ fi
 
 echo "# Getting Package Dependencies" 
 sudo apt-get install -yqq build-essential flex bison automake libreadline6-dev \
-autoconf bzr libtool cmake libaio-dev zlib1g-dev re2c libpspell-dev \
+autoconf bzr libtool cmake libaio-dev zlib1g-dev re2c libpspell-dev gearman \
 libxml2-dev libbz2-dev libpcre3-dev libssl-dev zlib1g-dev libmcrypt-dev libmhash-dev libmhash2 \
 libpq5 libncurses5-dev bison git libxslt1-dev libbz2-dev libexif-dev libsnmp-dev libldap-2.4-2 libldap2-dev \
 libfreetype6-dev libjpeg8-dev libpng12-dev libgif-dev libcurl4-openssl-dev libpq-dev scons check libboost1.48 libboost1.48-dev >> bakeryLog
