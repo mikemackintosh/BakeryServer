@@ -41,7 +41,7 @@ fi
 echo "# Configuring OpenSSL"
 cd openssl-$SSL_VER
 make clean  >>  bakeryLog 2>&1
-./Configure --prefix=/usr/local/openssl linux-`uname -m` >>  bakeryLog 2>&1
+./config --prefix=/usr/local/openssl >>  bakeryLog 2>&1
 echo "# Building OpenSSL"
 make  >>  bakeryLog 2>&1
 sudo make install  >>  bakeryLog 2>&1
